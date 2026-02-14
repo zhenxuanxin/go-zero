@@ -2765,3 +2765,18 @@ func toStrings(vals []any) []string {
 
 	return ret
 }
+
+// Close closes the Redis client connections managed by the client manager based on the Redis type.
+// This method should be called when the Redis instance is no longer needed to release resources.
+func (s *Redis) Close() error {
+	switch s.Type {
+	case ClusterType:
+		// Close all cluster clients
+		return clusterManager.Close()
+	case NodeType:
+		// Close all node clients
+		return clientManager.Close()
+	default:
+		return fmt.Errorf("redis type '%s' is not supported", s.Type)
+	}
+}

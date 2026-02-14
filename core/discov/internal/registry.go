@@ -47,6 +47,12 @@ func (r *Registry) GetConn(endpoints []string) (EtcdClient, error) {
 	return c.getClient()
 }
 
+// Close closes all etcd client connections managed by the connection manager.
+// This method should be called when the application is shutting down to release resources.
+func (r *Registry) Close() error {
+	return connManager.Close()
+}
+
 // Monitor monitors the key on given etcd endpoints, notify with the given UpdateListener.
 func (r *Registry) Monitor(endpoints []string, key string, exactMatch bool, l UpdateListener) error {
 	wkey := watchKey{

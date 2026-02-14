@@ -27,6 +27,12 @@ func Inject(key string, client *mongo.Client) {
 	clientManager.Inject(key, &ClosableClient{client})
 }
 
+// Close closes all MongoDB client connections managed by the client manager.
+// This method should be called when the application is shutting down to release resources.
+func Close() error {
+	return clientManager.Close()
+}
+
 func getClient(url string, opts ...Option) (*mongo.Client, error) {
 	val, err := clientManager.GetResource(url, func() (io.Closer, error) {
 		o := options.Client().ApplyURI(url)

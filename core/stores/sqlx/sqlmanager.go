@@ -83,3 +83,9 @@ func newDBConnection(driverName, datasource string) (*sql.DB, error) {
 
 	return conn, nil
 }
+
+// Close closes all database connections managed by the connection manager.
+// This method should be called when the application is shutting down to release resources.
+func Close() error {
+	return connManager.Close()
+}
