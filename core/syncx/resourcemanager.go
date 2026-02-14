@@ -23,7 +23,8 @@ func NewResourceManager() *ResourceManager {
 }
 
 // Close closes the manager.
-// Don't use the ResourceManager after Close() called.
+// It closes all resources managed by the manager.
+// The manager can still be used after Close() called.
 func (manager *ResourceManager) Close() error {
 	manager.lock.Lock()
 	defer manager.lock.Unlock()
@@ -35,8 +36,10 @@ func (manager *ResourceManager) Close() error {
 		}
 	}
 
-	// release resources to avoid using it later
-	manager.resources = nil
+	// Clear the resources map instead of setting it to nil
+	for k := range manager.resources {
+		delete(manager.resources, k)
+	}
 
 	return be.Err()
 }
